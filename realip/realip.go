@@ -51,20 +51,15 @@ func New(re, he, wh string) (*RealIPMiddleware, error) {
 		Whitelist: wh,
 	}
 
-	fmt.Println("New res: \n", res, "\n\n")
-
 	return &res, nil
 }
 
 func (rih *RealIPHandler) setXForwardedFor(r *http.Request) {
 	// rewrite NOT Append
-	fmt.Printf("bSet XFF:%v\tRAD:%v\n", r.Header.Get(headerXFF), r.Header.Get(headerRAD))
 	r.Header.Set(headerXFF, r.Header.Get(headerRAD))
-	fmt.Printf("aSet XFF:%v\tRAD:%v\n", r.Header.Get(headerXFF), r.Header.Get(headerRAD))
 }
 
 func (rih *RealIPHandler) setRemoteAddrWithXForwardedFor(r *http.Request) {
-	fmt.Println("*******")
 	xff := r.Header.Get(headerXFF)
 	if xff != "" {
 		list := strings.Split(xff, ",")
@@ -109,23 +104,15 @@ func (rim *RealIPMiddleware) NewHandler(next http.Handler) (http.Handler, error)
 		}
 		res.Whitelist = append(res.Whitelist, tmp)
 	}
+	
 	res.Whitelist = ipv4.IPv4SegamentsMerge(res.Whitelist)
-
-	fmt.Printf("New RealIP: %v\n", res)
-
 	res.next = next
 	res.cfg = *rim
-
-	fmt.Println("\n\nNew Handler: ", *rim)
-
 	return &res, nil
 }
 
 func (rih *RealIPHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("============")
-	fmt.Printf("RAD:%v\tXFF:%v\n", r.Header.Get(headerRAD), r.Header.Get(headerXFF))
 	reqIP, _, _ := net.SplitHostPort(r.RemoteAddr)
-	fmt.Printf("### RealIP: %v\n", rih.cfg)
 	switch rih.Header {
 	case headerXFF:
 		rih.setRemoteAddrWithXForwardedFor(r)
@@ -133,7 +120,5 @@ func (rih *RealIPHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		r.Header.Set(headerRAD, reqIP)
 	}
 	rih.setXForwardedFor(r)
-	fmt.Printf("RAD:%v\tXFF:%v\n", r.Header.Get(headerRAD), r.Header.Get(headerXFF))
-
 	rih.next.ServeHTTP(w, r)
 }
