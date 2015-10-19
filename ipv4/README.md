@@ -30,7 +30,7 @@ type IPv4Addr net.IP
 // type net.IP []byte
 ```
 #### 构造方法
-1. ```NewIPv4AddrFromString(str string) (IPv4Addr, error)```
+1. `NewIPv4AddrFromString(str string) (IPv4Addr, error)`
 
 	通过字符串构造一个IPv4地址
 	
@@ -40,7 +40,7 @@ type IPv4Addr net.IP
 	// ip为 127.0.0.1
 	```
 	
-2. ```NewIPv4AddrFromOther(other IPv4Addr) IPv4Addr```
+2. `NewIPv4AddrFromOther(other IPv4Addr) IPv4Addr`
 	
 	复制函数，复制另外一个IPv4Addr实例
 	
@@ -52,7 +52,7 @@ type IPv4Addr net.IP
 	```
 	
 #### 方法
-1. ```Equal(other IPv4Addr) bool```
+1. `Equal(other IPv4Addr) bool`
 
 	判断IP是否与other相同
 	
@@ -65,7 +65,7 @@ type IPv4Addr net.IP
 	ip1.Equal(ip3)		// false
 	```
 	
-2. ```Greater(other IPv4Addr) bool```
+2. `Greater(other IPv4Addr) bool`
 
 	判断IP是否在other之后，比如：1.1.1.2在1.1.1.1之后。
 	
@@ -80,7 +80,7 @@ type IPv4Addr net.IP
 	ip3.Greater(ip1)	// true
 	```
 	
-3. ```Less(other IPv4Addr) bool```
+3. `Less(other IPv4Addr) bool`
 
 	判断IP是否在other之前，比如：1.1.1.1在2.2.2.2之前。
 	
@@ -94,7 +94,7 @@ type IPv4Addr net.IP
 	ip1.Less(ip3)		// true
 	ip3.Less(ip1)		// false
 	
-4. ```String() string```
+4. `String() string`
 	
 	格式化输出IPv4，输出栗子：1.1.1.1
 	
@@ -114,8 +114,8 @@ type IPv4Segament struct {
 }
 ```
 #### 构造方法
-1. ```NewIPv4SegamentFromIPandMask(ip, mask IPv4Addr) (IPv4Segament, error)```
-	
+1. `NewIPv4SegamentFromIPandMask(ip, mask IPv4Addr) (IPv4Segament, error)`
+
 	通过IP与Mask来构造
 	
 	栗子🌰:
@@ -126,7 +126,7 @@ type IPv4Segament struct {
 	// IP段为 192.168.0.0 - 192.168.255.255
 	```
 	
-2. ```NewIPv4SegamentFromIPv4Addr(begin, end IPv4Addr) (IPv4Segament, error)```
+2. `NewIPv4SegamentFromIPv4Addr(begin, end IPv4Addr) (IPv4Segament, error)`
 
 	通过起始与结束IP来构造
 	
@@ -138,7 +138,7 @@ type IPv4Segament struct {
 	// IP段为 1.1.1.1 - 2.2.2.2
 	```
 	
-3. ```NewIPv4SegamentFromString(str string) (IPv4Segament, error)```
+3. `NewIPv4SegamentFromString(str string) (IPv4Segament, error)`
 	
 	通过字符串来构造
 	
@@ -153,7 +153,7 @@ type IPv4Segament struct {
 	// ips3为：1.1.1.1 - 2.2.2.2
 	```
 	
-4. ```NewIPv4SegamentFromOther(other IPv4Segament) IPv4Segament```
+4. `NewIPv4SegamentFromOther(other IPv4Segament) IPv4Segament`
 	
 	复制函数，复制另外一个IPv4Segament实例
 	
@@ -165,7 +165,7 @@ type IPv4Segament struct {
 	```
 
 #### 方法
-1. ```Equal(other IPv4Segament) bool```
+1. `Equal(other IPv4Segament) bool`
 	
 	判断是否相同
 	
@@ -179,7 +179,7 @@ type IPv4Segament struct {
 	ips1.Equal(ips3)		// false
 	```
 
-2. ```Less(other IPv4Segament) bool```
+2. `Less(other IPv4Segament) bool`
 	判断是否在otherIP段之前，优先比较begin的先后，再比较end的先后
 	栗子🌰:
 	```
@@ -192,7 +192,7 @@ type IPv4Segament struct {
 	ips3.Less(ips1)			// false
 	```
 	
-3. ```Greater(other IPv4Segament) bool```
+3. `Greater(other IPv4Segament) bool`
 	判断是否在otherIP段之后，优先比较begin的先后，再比较end的先后
 	栗子🌰:
 	```
@@ -205,7 +205,7 @@ type IPv4Segament struct {
 	ips3.Greater(ips1)		// true
 	```
 	
-4. ```IsInclude(ip IPv4Addr) bool ```
+4. `IsInclude(ip IPv4Addr) bool `
 	判断是否包含ip
 	栗子🌰:
 	```
@@ -216,7 +216,7 @@ type IPv4Segament struct {
 	ips.IsInclude(ip1)		// true
 	ips.IsInclude(ip2)		// false
 	```
-5. ```String() string```
+5. `String() string`
 
 	格式化输出IP段
 
@@ -237,25 +237,25 @@ type IPv4Segaments []IPv4Segament
 暂无
 
 #### sort.Interface接口实现
-1. ```Len() int```
+1. `Len() int`
 
 	获取IPv4地址段个数
-2. ```Less(i, j int) bool``` 
+2. `Less(i, j int) bool`
 	
 	比较第i与第j个IPv4地址段的先后
-3. ```Swap(i, j int)```
-	
+3. `Swap(i, j int)`
+
 	交换第i与第j个IPv4地址段
 
 #### 方法
-1. ```IsInclude(ip IPv4Addr) bool```
+1. `IsInclude(ip IPv4Addr) bool`
 
 	使用二分搜索，在许多已经有序的IPv4地址段中查询是否包含ip
 	
 ---
 	
 ## 其他辅助方法
-1. ```IPv4IntToMask(mint int) IPv4Addr, error```
+1. `IPv4IntToMask(mint int) IPv4Addr, error`
 
 	将整型转化为子网掩码，mint的范围[0, 32]
 
@@ -268,7 +268,7 @@ type IPv4Segaments []IPv4Segament
 	// mask2 为 255.255.255.240
 	```
 	
-2. ```splitWithoutSpace(str, flag string) []string```
+2. `splitWithoutSpace(str, flag string) []string`
 
 	基于strings.Split方法与strings.TrimSpace方法，在返回结果中，所有的字符串元素将去掉两端的空格
 
