@@ -2,7 +2,7 @@
 
 ## 更新
 ### 2015年10月19日
-	1.使用官方库（net）作为IPv4Addr底层
+	1.~~使用官方库（net）作为IPv4Addr底层~~(已经换回自己写的IPv4)
 	2.修复Segament构造函数名错误的问题
 	3.修改IPv4SegamentsMerge函数为IPv4Segaments结构的方法Merge
 
