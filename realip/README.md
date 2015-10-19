@@ -18,6 +18,7 @@ Vulcand的插件，能够通过配置来自动设置Remote_Addr的内容。
 ---
 ## 安装
 使用Vulcand自带的Vbundle安装。假定目录为（/vulcand-bundle）
+Tip: 最好新建一个文件夹来做，不要在vulcand目录中
 ```
 vbundle init --middleware="github.com/YunxiangHuang/vulcand-plugin/realip"
 ```
@@ -78,7 +79,7 @@ go get -u github.com/mailgun/log
 vtcl realip upsert --recursive=on --header="x-forwarded-for" -whitelist 8.8.8.8/24,172.168.199.1 -f f1 --id realip1
 
 // etcd
-etcdctl set vulcand/frontends/f1/middlwares/realip1 '
+etcdctl set vulcand/frontends/f1/middlewares/realip1 '
 	{
 		"Id":"realip1",
 		"Priority":1,
