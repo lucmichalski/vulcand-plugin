@@ -93,6 +93,7 @@ type IPv4Addr net.IP
 	ip1.Less(ip2)		// false
 	ip1.Less(ip3)		// true
 	ip3.Less(ip1)		// false
+	```
 	
 4. `String() string`
 	
