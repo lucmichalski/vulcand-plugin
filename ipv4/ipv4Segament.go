@@ -2,8 +2,8 @@ package ipv4
 
 import (
 	"fmt"
-	"strings"
 	"strconv"
+	"strings"
 )
 
 type IPv4Segament struct {
@@ -62,7 +62,7 @@ func IPv4IntToMask(mint int) (IPv4Addr, error) {
 	if mint < 0 || mint > 32 {
 		return nil, fmt.Errorf("mask must between 0 and 32: ", mint)
 	}
-	
+
 	var now int
 	res := IPv4Addr{0, 0, 0, 0}
 	for now = 0; now < (mint / 8); now++ {
@@ -70,7 +70,7 @@ func IPv4IntToMask(mint int) (IPv4Addr, error) {
 	}
 	for mint %= 8; now < 4; now++ {
 		for ; mint > 0; mint-- {
-			res[now] += (1 << (uint8(8-mint)))
+			res[now] += (1 << (uint8(8 - mint)))
 		}
 	}
 	return res, nil
@@ -106,7 +106,7 @@ func NewIPv4SegamentFromString(str string) (IPv4Segament, error) {
 			return IPv4Segament{}, err
 		}
 		return NewIPv4SegamentFromIPandMask(tmpIP, tmpMask)
-		
+
 	case strings.Contains(str, "-"):
 		strs := splitWithoutSpace(str, "-")
 		if len(strs) != 2 {
