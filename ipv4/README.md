@@ -196,7 +196,9 @@ type IPv4Segament struct {
 	```
 	
 3. `Greater(other IPv4Segament) bool`
+
 	判断是否在otherIP段之后，优先比较begin的先后，再比较end的先后
+	
 	栗子🌰:
 	```
 	// ips1 为 1.1.1.1 - 2.2.2.2
@@ -209,7 +211,9 @@ type IPv4Segament struct {
 	```
 	
 4. `IsInclude(ip IPv4Addr) bool `
+
 	判断是否包含ip
+	
 	栗子🌰:
 	```
 	// ip1 为 1.1.1.1
