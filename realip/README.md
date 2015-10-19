@@ -19,7 +19,7 @@ Vulcand的插件，能够通过配置来自动设置Remote_Addr的内容。
 ## 安装
 使用Vulcand自带的Vbundle安装。假定目录为（/vulcand-bundle）
 ```
-Vbundle --middleware="github.com/YunxiangHuang/vulcand-plugin/realip
+vbundle init --middleware="github.com/YunxiangHuang/vulcand-plugin/realip"
 ```
 修改/vulcand-bundle/vctl/main.go
 ```
@@ -29,8 +29,14 @@ log.NewConsoleLogger(log.Config{log.Console, "console"})
 在/vulcand-bundle中执行如下语句
 ```
 go build -o vulcand
-push vctl/; go build -o vctl; popd
+pushd vctl/; go build -o vctl; popd
 ```
+如果在编译过程中提示找不到 github.com/mailgun/log 或其他内容，请执行以下语句
+```
+go get -u github.com/mailgun/vulcand
+go get -u github.com/mailgun/log
+```
+
 之后回在/vulcand-bundle中生成vulcand，在/vulcand-bundle/vctl中生成vctl
 两个二进制文件需要搭配使用。
 
