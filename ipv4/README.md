@@ -181,7 +181,9 @@ type IPv4Segament struct {
 	```
 
 2. `Less(other IPv4Segament) bool`
+
 	判断是否在otherIP段之前，优先比较begin的先后，再比较end的先后
+
 	栗子🌰:
 	```
 	// ips1 为 1.1.1.1 - 2.2.2.2
