@@ -1,6 +1,11 @@
 # Real IP Middleware
 
 ## 更新
+### 2015年10月19日
+	1.使用官方库（net）作为IPv4Addr底层
+	2.修复Segament构造函数名错误的问题
+	3.修改IPv4SegamentsMerge函数为IPv4Segaments结构的方法Merge
+
 ### 2015年10月16日
 	1.增加命令简写（-R, -H, -W)
 	2.拆分文件

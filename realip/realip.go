@@ -105,7 +105,7 @@ func (rim *RealIPMiddleware) NewHandler(next http.Handler) (http.Handler, error)
 		res.Whitelist = append(res.Whitelist, tmp)
 	}
 
-	res.Whitelist = ipv4.IPv4SegamentsMerge(res.Whitelist)
+	res.Whitelist.Merge()
 	res.next = next
 	res.cfg = *rim
 	return &res, nil
