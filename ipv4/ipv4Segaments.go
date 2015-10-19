@@ -2,9 +2,18 @@ package ipv4
 
 import "sort"
 
+// IPv4Segaments ========================================================
+// Simple IPv4Segaments Struct, base on IPv4Segament
+// Support sort.Interface
+// ======================================================================
 type IPv4Segaments []IPv4Segament
 
+// Merge IPv4 Segament
+// 1.1.1.1 - 1.1.1.5 and 1.1.1.3 - 1.1.1.7 will merge to 1.1.1.1 - 1.1.1.7
 func (this IPv4Segaments) Merge() bool {
+	if this.Len() <= 1 {
+		return true
+	}
 	sort.Sort(this)
 	var res IPv4Segaments
 	var now = 0
@@ -13,7 +22,7 @@ func (this IPv4Segaments) Merge() bool {
 			res = append(res, this[i])
 		} else {
 			if res[now].IsInclude(this[i].Begin) {
-				if res[now].End.Greater(this[i].End) {
+				if res[now].End.Less(this[i].End) {
 					res[now].End = this[i].End
 				}
 			} else {
@@ -26,6 +35,7 @@ func (this IPv4Segaments) Merge() bool {
 	return true
 }
 
+// Support sort.Interface
 func (this IPv4Segaments) Len() int {
 	return len(this)
 }
@@ -56,11 +66,11 @@ func (this IPv4Segaments) IsInclude(ip IPv4Addr) bool {
 			}
 			return this[low].IsInclude(ip) || this[end].IsInclude(ip)
 		}
-
+		
 		if this[mid].IsInclude(ip) {
 			return true
 		} else {
-			if this[mid].End.Less(ip) {
+			if ip.Greater(this[mid].End) {
 				low = mid + 1
 			} else {
 				end = mid - 1
