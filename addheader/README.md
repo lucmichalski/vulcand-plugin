@@ -56,9 +56,7 @@ etcdctl set vulcand/frontends/f1/middlewares/addheader1 '
 		"Middleware": {
 			"setproxyheader": "X-Forwarded-For:$REAL_IP, test:ohaha"
 		}
-	}
-
-
+	}'
 ```
 
 注意:因为部分shell将$认为是变量，因此在设置setproxyheader参数时请尽量用`''`进行包裹
