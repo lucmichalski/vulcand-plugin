@@ -93,7 +93,7 @@ etcdctl set vulcand/frontends/f1/middlewares/realip1 '
 		"Middleware": {
 			“Header": "x-forwarded-for",
 			"Recursive":"on",
-			"Whitelist":"8.8.8.8/24, 172.168.199.1"
+			"Whitelist":"8.8.8.8/24, 172.168.199.1",
 			"Name": "realip_test"
 		}
 	}'

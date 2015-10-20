@@ -19,7 +19,7 @@ func GetSpec() *plugin.MiddlewareSpec {
 }
 
 func FromOther(ahm AddHeaderMiddleware) (plugin.Middleware, error) {
-	return New(ahm.SetProxy)
+	return New(ahm.SetProxyHeader)
 }
 
 func FromCli(c *cli.Context) (plugin.Middleware, error) {

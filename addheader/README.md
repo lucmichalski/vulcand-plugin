@@ -45,18 +45,19 @@ go get -u github.com/mailgun/log
 以上配置适用于etcd、vctl设置，具体格式请查看etcd与vctl的文档，一下是栗子🌰:
 ```
 // vtcl
-vctl addheader -S='X-Forwarded-For:$REAL_IP, test:ohaha' -f f1 --id addheader1
+vctl addheader upsert -S='X-Forwarded-For:$REALIP_XFF, test:ohaha' -f f1 --id addheader1
 
-// etcd
 etcdctl set vulcand/frontends/f1/middlewares/addheader1 '
 	{
-		"Id":"addheader1",
-		"Priority":1,
-		"Type":"addheader1",
+		"Id": "addheader1",
+		"Priority": 1,
+		"Type": "addheader",
 		"Middleware": {
-			"setproxyheader": "X-Forwarded-For:$REAL_IP, test:ohaha"
+			"setproxyheader": "X-Forwarded-For:$REALIP_XFF, test:ohaha"
 		}
-	}'
+	}
+'
+
 ```
 
 注意:因为部分shell将$认为是变量，因此在设置setproxyheader参数时请尽量用`''`进行包裹
