@@ -20,7 +20,7 @@ type AddHeaderHandler struct {
 }
 
 type AddHeaderMiddleware struct {
-	SetProxy string
+	SetProxyHeader string
 }
 
 func New(sp string) (*AddHeaderMiddleware, error) {
@@ -29,7 +29,7 @@ func New(sp string) (*AddHeaderMiddleware, error) {
 		return &AddHeaderMiddleware{}, fmt.Errorf("Must set at least 1 Key-Value pair.")
 	}
 	return &AddHeaderMiddleware{
-		SetProxy: sp,
+		SetProxyHeader: sp,
 	}, nil
 }
 
@@ -37,7 +37,7 @@ func (ahm *AddHeaderMiddleware) NewHandler(next http.Handler) (http.Handler, err
 	var res AddHeaderHandler
 	res.SetProxy = make(map[string]string)
 	res.next = next
-	hs := utils.SplitWithoutSpace(ahm.SetProxy, ",")
+	hs := utils.SplitWithoutSpace(ahm.SetProxyHeader, ",")
 
 	for i := range hs {
 		tmp := utils.SplitWithoutSpace(hs[i], ":")
