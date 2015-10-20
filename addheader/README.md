@@ -9,7 +9,7 @@
 Tip: 最好新建一个文件夹来坐，不要再Vulcand的目录中
 
 ```
-vbundle init --middleware="github.com/YunxiangHuang/vulcand-plugin/realip"
+vbundle init --middleware="github.com/YunxiangHuang/vulcand-plugin/addheader"
 ```
 修改 /vulcand-bundle/vctl/main.go
 ```
