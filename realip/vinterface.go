@@ -27,13 +27,14 @@ func FromCli(c *cli.Context) (plugin.Middleware, error) {
 		return &RealIPMiddleware{}, fmt.Errorf("Missing Arguments: recursive or whitelist.")
 	}
 	
-	return New(c.String("recursive"), c.String("header"), c.String("whitelist"))
+	return New(c.String("recursive"), c.String("header"), c.String("whitelist"), c.String("name"))
 }
 
 func CliFlags() []cli.Flag {
 	return []cli.Flag{
 		cli.StringFlag{"recursive, R", "", "Enable Recursive [ON|OFF]", ""},
-		cli.StringFlag{"header, H", "", "Which set to REMOTE_ADDR [REMOTE_ADDR|X-FORWARDED-FOR]", ""},
+		cli.StringFlag{"header, H", "REMOTE_ADDR", "Which set to X-FORWARDED-FOR [REMOTE_ADDR|X-FORWARDED-FOR]", ""},
 		cli.StringFlag{"whitelist, W", "", "Whitelist, format: 1.1.1.1/24 or 1.1.1.1", ""},
+		cli.StringFlag{"name, N", "REALIP_XFF", "Realip will set this Key-Value to Header and not set X-FORWARDED-FOR"},
 	}
 }

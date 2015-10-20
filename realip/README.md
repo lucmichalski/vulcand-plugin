@@ -13,7 +13,7 @@
     4.包含YunxiangHuang/ipv4
 
 ## 说明
-Vulcand的插件，能够通过配置来自动设置Remote_Addr的内容。
+Vulcand的插件，能够通过配置来预配置HTTP头部的内容。
 
 ---
 ## 安装
@@ -72,11 +72,17 @@ go get -u github.com/mailgun/log
 |带子网掩码|`192.168.0.1/24`|
 |起始与结束IP|`192.168.0.1-192.168.0.5`|
 
+### -name, -N
+#### 格式
+字符串即可，比如:`REALIP_XFF`（这个是默认值）
+#### 说明
+增加此选项是为了将设置头部的操作交付给addHeader，realip仅提供配置，由addHeader的配置决定设置的具体内容（包含设置与否，设置在哪个Key等，具体请参看vulcand-plugin/addheader）
+
 以上配置适用于使用etcd、vctl设置，具体格式请查看etcd与vctl的文档，以下是栗子：
 ```
 // vtcl
 // --recursive与--whitelist为必选选项
-vtcl realip upsert --recursive=on --header="x-forwarded-for" -whitelist 8.8.8.8/24,172.168.199.1 -f f1 --id realip1
+vtcl realip upsert --recursive=on --header="x-forwarded-for" -whitelist 8.8.8.8/24,172.168.199.1 -N realip_test -f f1 --id realip1
 
 // etcd
 etcdctl set vulcand/frontends/f1/middlewares/realip1 '
@@ -85,10 +91,12 @@ etcdctl set vulcand/frontends/f1/middlewares/realip1 '
 		"Priority":1,
 		"Type":"realip",
 		"Middleware": {
-			“header": "x-forwarded-for",
-			"recursive":"on",
-			"whitelist":"8.8.8.8/24, 172.168.199.1"
+			“Header": "x-forwarded-for",
+			"Recursive":"on",
+			"Whitelist":"8.8.8.8/24, 172.168.199.1"
+			"Name": "realip_test"
 		}
 	}'
-// 注意，etcd中realip的设置在Middleware部分，之前的部分是vulcand的配置
+// 注意1，etcd中realip的设置在Middleware部分，之前的部分是vulcand的配置
+// 注意2，Middleware部分最好设置成首字母大写，能够避免一些奇怪的问题（比如读取不到配置）
 ```

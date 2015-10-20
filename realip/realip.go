@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/YunxiangHuang/vulcand-plugin/ipv4"
+	"github.com/YunxiangHuang/vulcand-plugin/utils"
 )
 
 const (
@@ -16,6 +17,8 @@ const (
 	headerXFF = "X-FORWARDED-FOR"
 	headerRIP = "REAL_IP"
 	headerRAD = "REMOTE_ADDR"
+	
+	defaultAimHeader = "REALIP_XFF"
 )
 
 type RealIPHandler struct {
@@ -25,12 +28,14 @@ type RealIPHandler struct {
 	Header    string
 	Recursive bool
 	Whitelist ipv4.IPv4Segaments
+	AimHeader string
 }
 
 type RealIPMiddleware struct {
 	Recursive string
 	Header    string
 	Whitelist string
+	Name      string
 }
 
 func New(re, he, wh string) (*RealIPMiddleware, error) {
@@ -59,10 +64,10 @@ func (rih *RealIPHandler) setXForwardedFor(r *http.Request) {
 	r.Header.Set(headerXFF, r.Header.Get(headerRAD))
 }
 
-func (rih *RealIPHandler) setRemoteAddrWithXForwardedFor(r *http.Request) {
+func (rih *RealIPHandler) setAimHeaderWithXForwardedFor(aim string, r *http.Request) {
 	xff := r.Header.Get(headerXFF)
 	if xff != "" {
-		list := strings.Split(xff, ",")
+		list := utils.SplitWithoutSpace(xff, ",")
 		if rih.Recursive {
 			flag := true
 			for i := len(list) - 1; i >= 0; i-- {
@@ -71,16 +76,16 @@ func (rih *RealIPHandler) setRemoteAddrWithXForwardedFor(r *http.Request) {
 					continue
 				}
 				if !rih.Whitelist.IsInclude(tmpIP) {
-					r.Header.Set(headerRAD, tmpIP.String())
+					r.Header.Set(aim, tmpIP.String())
 					flag = false
 					break
 				}
 			}
 			if flag {
-				r.Header.Set(headerRAD, list[0])
+				r.Header.Set(aim, list[0])
 			}
 		} else {
-			r.Header.Set(headerRAD, list[len(list)-1])
+			r.Header.Set(aim, list[len(list)-1])
 		}
 	}
 }
@@ -95,8 +100,14 @@ func (rim *RealIPMiddleware) NewHandler(next http.Handler) (http.Handler, error)
 	} else {
 		res.Header = rim.Header
 	}
+	
+	if rim.Name == "" {
+		res.AimHeader = defaultAimHeader
+	} else {
+		res.AimHeader = rim.Name
+	}
 
-	wList := strings.Split(rim.Whitelist, ",")
+	wList := utils.SplitWithoutSpace(rim.Whitelist, ",")
 	for i := range wList {
 		tmp, err := ipv4.NewIPv4SegamentFromString(wList[i])
 		if err != nil {
@@ -115,10 +126,9 @@ func (rih *RealIPHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	reqIP, _, _ := net.SplitHostPort(r.RemoteAddr)
 	switch rih.Header {
 	case headerXFF:
-		rih.setRemoteAddrWithXForwardedFor(r)
+		rih.setAimHeaderWithXForwardedFor(r)
 	default:
-		r.Header.Set(headerRAD, reqIP)
+		r.Header.Set(r.AimHeader, reqIP)
 	}
-	rih.setXForwardedFor(r)
 	rih.next.ServeHTTP(w, r)
 }
