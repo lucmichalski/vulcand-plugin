@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"github.com/YunxiangHuang/vulcand-plugin/utils"
 )
 
 // ipv4 segament =====================================
@@ -13,14 +14,6 @@ import (
 type IPv4Segament struct {
 	Begin IPv4Addr
 	End   IPv4Addr
-}
-
-func splitWithoutSpace(str string, flag string) []string {
-		res := strings.Split(str, flag)
-	for i := range res {
-		res[i] = strings.TrimSpace(res[i])
-	}
-	return res
 }
 
 // Less compare begin ip at first, if equal then compare end ip
@@ -95,7 +88,7 @@ func NewIPv4SegamentFromIPandMask(ip, mask IPv4Addr) (IPv4Segament, error) {
 func NewIPv4SegamentFromString(str string) (IPv4Segament, error) {
 	switch {
 	case strings.Contains(str, "/"):
-		strs := splitWithoutSpace(str, "/")
+		strs := utils.SplitWithoutSpace(str, "/")
 		if len(strs) != 2 {
 			return IPv4Segament{}, fmt.Errorf("Unsupport IP segament format: ", str)
 		}
@@ -114,7 +107,7 @@ func NewIPv4SegamentFromString(str string) (IPv4Segament, error) {
 		return NewIPv4SegamentFromIPandMask(tmpIP, tmpMask)
 
 	case strings.Contains(str, "-"):
-		strs := splitWithoutSpace(str, "-")
+		strs := utils.SplitWithoutSpace(str, "-")
 		if len(strs) != 2 {
 			return IPv4Segament{}, fmt.Errorf("Unsupport IP segament format: ", str)
 		}

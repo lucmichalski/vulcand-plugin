@@ -5,6 +5,7 @@ import (
 	"net"
 	"strconv"
 	"strings"
+	"github.com/YunxiangHuang/vulcand-plugin/utils"
 )
 
 // Include IPv4, IPv4Segament, IPv4Segaments
@@ -55,7 +56,7 @@ func NewIPv4AddrFromOther(other IPv4Addr) (IPv4Addr, error) {
 
 func NewIPv4AddrFromString(str string) (IPv4Addr, error) {
 	var res IPv4Addr
-	tmp := strings.Split(str, ".")
+	tmp := utils.SplitWithoutSpace(str, ".")
 	for i := range tmp {
 		tmp[i] = strings.TrimSpace(tmp[i])
 	}

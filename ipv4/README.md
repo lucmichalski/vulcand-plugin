@@ -1,13 +1,17 @@
 # IPv4
 
 ## 更新
+### 2015年10月20日
+	1.增加 ToNetIP() 方法，将IPv4Addr转换为Go官方库中的net.IP
+	2.将splitWithoutSpace() 方法移出到 vulcand-plugin/utils
+
 ### 2015年10月19日
-	1.使用官方库（net）作为IPv4Addr作为底层
+	1.~~使用官方库（net）作为IPv4Addr作为底层~~(已于当天改回）
 	2.修复Segament构造函数名称错误的问题
 	3.完善文档
 	
 ## 说明
-本项目是工具项目，对Go官方库net.IP进行了加工，封装了一些方便的方法供使用（至少对于我个人而言QAQ）。
+本项目是工具项目，封装了一些与IPv4相关的方便的方法供使用（至少对于我个人而言QAQ）。
 
 ## 安装
 ```
@@ -105,6 +109,10 @@ type IPv4Addr net.IP
 	fmt.Printf(ip.String())
 	// 输出结果为 1.1.1.1
 	```
+
+5. `ToNetIP() net.IP`
+
+	可以将IPv4Addr转换为Go官方库中的net.IP类型
 	
 ### IPv4Segament - IPv4地址段
 #### 定义
@@ -273,14 +281,4 @@ type IPv4Segaments []IPv4Segament
 	
 	// mask1 为 255.255.255.0
 	// mask2 为 255.255.255.240
-	```
-	
-2. `splitWithoutSpace(str, flag string) []string`
-
-	基于strings.Split方法与strings.TrimSpace方法，在返回结果中，所有的字符串元素将去掉两端的空格
-
-	栗子🌰:
-	```
-		res := splitWithoutSpace("1.1.1.1 ,    2.2.2.2/24", ",")
-		// res 为 ["1.1.1.1", "2.2.2.2/24"]
 	```
