@@ -38,7 +38,7 @@ type RealIPMiddleware struct {
 	Name      string
 }
 
-func New(re, he, wh string) (*RealIPMiddleware, error) {
+func New(re, he, wh, na string) (*RealIPMiddleware, error) {
 	re = strings.TrimSpace(strings.ToUpper(re))
 	he = strings.TrimSpace(strings.ToUpper(he))
 
@@ -49,11 +49,16 @@ func New(re, he, wh string) (*RealIPMiddleware, error) {
 	if he != headerXFF && he != headerRAD && he != headerRIP && he != "" {
 		return &RealIPMiddleware{}, fmt.Errorf("Config error - header: ", he)
 	}
+	
+	if na == "" {
+		na = defaultAimHeader
+	}
 
 	res := RealIPMiddleware{
 		Recursive: re,
 		Header:    he,
 		Whitelist: wh,
+		Name:      na,
 	}
 
 	return &res, nil
@@ -126,9 +131,9 @@ func (rih *RealIPHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	reqIP, _, _ := net.SplitHostPort(r.RemoteAddr)
 	switch rih.Header {
 	case headerXFF:
-		rih.setAimHeaderWithXForwardedFor(r)
+		rih.setAimHeaderWithXForwardedFor(rih.AimHeader, r)
 	default:
-		r.Header.Set(r.AimHeader, reqIP)
+		r.Header.Set(rih.AimHeader, reqIP)
 	}
 	rih.next.ServeHTTP(w, r)
 }
