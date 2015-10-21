@@ -24,13 +24,17 @@ func FromOther(ahm AddHeaderMiddleware) (plugin.Middleware, error) {
 
 func FromCli(c *cli.Context) (plugin.Middleware, error) {
 	if !c.IsSet("setproxyheader") {
-		return &AddHeaderMiddleware{}, fmt.Errorf("Missing Argument: setproxyheader.")
+		if !c.IsSet("S") {
+			return &AddHeaderMiddleware{}, fmt.Errorf("Miss Argument: setproxyheader.")
+		} else {
+			return New(c.StringSlice("S"))
+		}
 	}
-	return New(c.String("setproxyheader"))
+	return New(c.StringSlice("setproxyheader"))
 }
 
 func CliFlags() []cli.Flag {
 	return []cli.Flag{
-		cli.StringFlag{"setproxyheader, S", "", "set proxy header and value like: key1:value1, key2:" + HeaderFlag + "X-FORWARDED-FOR", ""},
+		cli.StringSliceFlag{"setproxyheader, S", &cli.StringSlice{}, "set proxy header and value", ""},
 	}
 }

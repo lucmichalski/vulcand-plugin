@@ -20,13 +20,12 @@ type AddHeaderHandler struct {
 }
 
 type AddHeaderMiddleware struct {
-	SetProxyHeader string
+	SetProxyHeader []string
 }
 
-func New(sp string) (*AddHeaderMiddleware, error) {
-	hs := utils.SplitWithoutSpace(sp, ",")
-	if sp == "" || len(hs) <= 0 {
-		return &AddHeaderMiddleware{}, fmt.Errorf("Must set at least 1 Key-Value pair.")
+func New(sp []string) (*AddHeaderMiddleware, error) {
+	if len(sp) <= 0 {
+		return &AddHeaderMiddleware{}, fmt.Errorf("Must set at least 1 Key-Value pair :", sp)
 	}
 	return &AddHeaderMiddleware{
 		SetProxyHeader: sp,
@@ -37,12 +36,11 @@ func (ahm *AddHeaderMiddleware) NewHandler(next http.Handler) (http.Handler, err
 	var res AddHeaderHandler
 	res.SetProxy = make(map[string]string)
 	res.next = next
-	hs := utils.SplitWithoutSpace(ahm.SetProxyHeader, ",")
 
-	for i := range hs {
-		tmp := utils.SplitWithoutSpace(hs[i], ":")
+	for i := range ahm.SetProxyHeader {
+		tmp := utils.SplitWithoutSpace(ahm.SetProxyHeader[i], ":")
 		if len(tmp) != 2 || tmp[1] == "" {
-			return &res, fmt.Errorf("Format error: ", hs[i])
+			return &res, fmt.Errorf("Format error: ", ahm.SetProxyHeader[i])
 		} else {
 			res.SetProxy[tmp[0]] = tmp[1]
 		}
