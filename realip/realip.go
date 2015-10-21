@@ -8,6 +8,7 @@ import (
 
 	"github.com/YunxiangHuang/vulcand-plugin/ipv4"
 	"github.com/YunxiangHuang/vulcand-plugin/utils"
+	"github.com/mailgun/vulcand/Godeps/_workspace/src/github.com/mailgun/log"
 )
 
 const (
@@ -17,7 +18,7 @@ const (
 	headerXFF = "X-FORWARDED-FOR"
 	headerRIP = "REAL_IP"
 	headerRAD = "REMOTE_ADDR"
-	
+
 	defaultAimHeader = "REALIP_XFF"
 )
 
@@ -49,7 +50,7 @@ func New(re, he, wh, na string) (*RealIPMiddleware, error) {
 	if he != headerXFF && he != headerRAD && he != headerRIP && he != "" {
 		return &RealIPMiddleware{}, fmt.Errorf("Config error - header: ", he)
 	}
-	
+
 	if na == "" {
 		na = defaultAimHeader
 	}
@@ -105,7 +106,7 @@ func (rim *RealIPMiddleware) NewHandler(next http.Handler) (http.Handler, error)
 	} else {
 		res.Header = rim.Header
 	}
-	
+
 	if rim.Name == "" {
 		res.AimHeader = defaultAimHeader
 	} else {
@@ -128,12 +129,18 @@ func (rim *RealIPMiddleware) NewHandler(next http.Handler) (http.Handler, error)
 }
 
 func (rih *RealIPHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	reqIP, _, _ := net.SplitHostPort(r.RemoteAddr)
-	switch rih.Header {
-	case headerXFF:
-		rih.setAimHeaderWithXForwardedFor(rih.AimHeader, r)
-	default:
-		r.Header.Set(rih.AimHeader, reqIP)
+	tmp, _, _ := net.SplitHostPort(r.RemoteAddr)
+	if reqIP, err := ipv4.NewIPv4AddrFromString(tmp); err == nil {
+		if rih.Whitelist.IsInclude(reqIP) {
+			switch rih.Header {
+			case headerXFF:
+				rih.setAimHeaderWithXForwardedFor(rih.AimHeader, r)
+			default:
+				r.Header.Set(rih.AimHeader, reqIP.String())
+			}
+		}
+	} else {
+		log.Errorf("Illegal Request", r)
 	}
 	rih.next.ServeHTTP(w, r)
 }
