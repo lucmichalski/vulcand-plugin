@@ -38,14 +38,14 @@ go get -u github.com/mailgun/log
 |---|-----|----|
 |单一Header，设置字符串|Test:test|设置Test的值为"test"|
 |单一Header，设置变量*|Test:$X-Forwarded-For|设置Test的值为头部中X-Forwarded-For的值|
-|多个Header|test1:test1, test2:test2||
+|多个Header|这个栗子请看下面的配置栗子||
 
 	*：此处变量是指HTTP头部中的Key，例如：X-Forwarded-For
 
 以上配置适用于etcd、vctl设置，具体格式请查看etcd与vctl的文档，一下是栗子🌰:
 ```
 // vtcl
-vctl addheader upsert -S='X-Forwarded-For:$REALIP_XFF, test:ohaha' -f f1 --id addheader1
+vctl addheader upsert -S='X-Forwarded-For:$REALIP_XFF' -S='test:ohaha' -f f1 --id addheader1
 
 etcdctl set vulcand/frontends/f1/middlewares/addheader1 '
 	{
@@ -53,7 +53,7 @@ etcdctl set vulcand/frontends/f1/middlewares/addheader1 '
 		"Priority": 1,
 		"Type": "addheader",
 		"Middleware": {
-			"setproxyheader": "X-Forwarded-For:$REALIP_XFF, test:ohaha"
+			"setproxyheader": ["X-Forwarded-For:$REALIP_XFF", "test:ohaha"]
 		}
 	}
 '
