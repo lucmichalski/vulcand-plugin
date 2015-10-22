@@ -39,10 +39,13 @@ func (ahm *AddHeaderMiddleware) NewHandler(next http.Handler) (http.Handler, err
 
 	for i := range ahm.SetProxyHeader {
 		tmp := utils.SplitWithoutSpace(ahm.SetProxyHeader[i], ":")
-		if len(tmp) != 2 || tmp[1] == "" {
-			return &res, fmt.Errorf("Format error: ", ahm.SetProxyHeader[i])
-		} else {
+		switch len(tmp) {
+		case 2:
 			res.SetProxy[strings.ToUpper(tmp[0])] = tmp[1]
+		case 1:
+			res.SetProxy[strings.ToUpper(tmp[0])] = ""
+		default:
+			return &res, fmt.Errorf("Format error: ", tmp)
 		}
 	}
 
