@@ -42,7 +42,7 @@ func (ahm *AddHeaderMiddleware) NewHandler(next http.Handler) (http.Handler, err
 		if len(tmp) != 2 || tmp[1] == "" {
 			return &res, fmt.Errorf("Format error: ", ahm.SetProxyHeader[i])
 		} else {
-			res.SetProxy[tmp[0]] = tmp[1]
+			res.SetProxy[strings.ToUpper(tmp[0])] = tmp[1]
 		}
 	}
 
@@ -51,7 +51,7 @@ func (ahm *AddHeaderMiddleware) NewHandler(next http.Handler) (http.Handler, err
 
 func (ahh *AddHeaderHandler) SetProxyHeader(r *http.Request) {
 	for k, v := range ahh.SetProxy {
-		if upkey := strings.ToUpper(k); upkey == "X-FORWARDED-FOR" {
+		if k == "X-FORWARDED-FOR" {
 			r.Header.Set("REALIP", "AH_"+(r.Header.Get("REALIP")))
 		}
 		if strings.HasPrefix(v, HeaderFlag) {
