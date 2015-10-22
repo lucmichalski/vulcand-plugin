@@ -51,6 +51,9 @@ func (ahm *AddHeaderMiddleware) NewHandler(next http.Handler) (http.Handler, err
 
 func (ahh *AddHeaderHandler) SetProxyHeader(r *http.Request) {
 	for k, v := range ahh.SetProxy {
+		if upkey := strings.ToUpper(k); upkey == "X-FORWARDED-FOR" {
+			r.Header.Set("REALIP", "AH_"+(r.Header.Get("REALIP")))
+		}
 		if strings.HasPrefix(v, HeaderFlag) {
 			tmp := r.Header.Get(strings.TrimPrefix(v, HeaderFlag))
 			r.Header.Set(k, tmp)
