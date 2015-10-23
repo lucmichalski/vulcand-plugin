@@ -15,6 +15,9 @@
 ## 说明
 Vulcand的插件，能够通过配置来预配置HTTP头部的内容。
 
+补充说明：
+	因为Vulcand在转发的时候会修改X-Forwarded-For，所以本模块只能临时取消-name参数，并将原本应该设置在XFF中的值设置到REALIP中，如需使用请再addheader模块中配置将XFF的值设定成$REALIP。
+
 ---
 ## 安装
 使用Vulcand自带的Vbundle安装。假定目录为（/vulcand-bundle）
