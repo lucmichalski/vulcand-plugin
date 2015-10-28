@@ -8,7 +8,7 @@ import (
 
 	"github.com/YunxiangHuang/vulcand-plugin/ipv4"
 	"github.com/YunxiangHuang/vulcand-plugin/utils"
-	"github.com/mailgun/vulcand/Godeps/_workspace/src/github.com/mailgun/log"
+	"github.com/mailgun/log"
 )
 
 const (
