@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/codegangsta/cli"
-	"github.com/mailgun/vulcand/plugin"
+	"github.com/eleme/vulcand/plugin"
 )
 
 const Type = "addheader"
