@@ -19,7 +19,7 @@ const (
 	headerRIP = "REAL_IP"
 	headerRAD = "REMOTE_ADDR"
 
-	defaultAimHeader = "REALIP_XFF"
+	defaultAimHeader = "REALIP"
 )
 
 type RealIPHandler struct {
@@ -63,11 +63,6 @@ func New(re, he, wh, na string) (*RealIPMiddleware, error) {
 	}
 
 	return &res, nil
-}
-
-func (rih *RealIPHandler) setXForwardedFor(r *http.Request) {
-	// rewrite NOT Append
-	r.Header.Set(headerXFF, r.Header.Get(headerRAD))
 }
 
 func (rih *RealIPHandler) setAimHeaderWithXForwardedFor(aim string, r *http.Request) {
