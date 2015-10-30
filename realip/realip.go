@@ -51,9 +51,9 @@ func New(re, he, wh, na string) (*RealIPMiddleware, error) {
 		return &RealIPMiddleware{}, fmt.Errorf("Config error - header: ", he)
 	}
 
-	if na == "" {
-		na = defaultAimHeader
-	}
+//	if na == "" {
+	na = defaultAimHeader
+//	}
 
 	res := RealIPMiddleware{
 		Recursive: re,
@@ -102,11 +102,11 @@ func (rim *RealIPMiddleware) NewHandler(next http.Handler) (http.Handler, error)
 		res.Header = rim.Header
 	}
 
-	if rim.Name == "" {
-		res.AimHeader = defaultAimHeader
-	} else {
-		res.AimHeader = rim.Name
-	}
+//	if rim.Name == "" {
+	res.AimHeader = defaultAimHeader
+//	} else {
+//		res.AimHeader = rim.Name
+//	}
 
 	wList := utils.SplitWithoutSpace(rim.Whitelist, ",")
 	for i := range wList {
